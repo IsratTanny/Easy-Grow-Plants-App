@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - Easy Grow Plants{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="register-container">
+        <div class="register-left">
+            <h1>🌿 Join Us</h1>
+            <p>Start your journey to becoming a plant expert with our smart growing platform.</p>
+            <ul class="benefits">
+                <li>Access to 1000+ plant species database</li>
+                <li>Connect IoT devices for smart monitoring</li>
+                <li>AI-powered plant health diagnosis</li>
+                <li>Buy and sell plants in marketplace</li>
+                <li>Track your sustainability impact</li>
+                <li>Join a community of plant lovers</li>
+            </ul>
+        </div>
+        <div class="register-right">
+            <div class="register-header">
+                <h2>Create Account</h2>
+                <p>Fill in your details to get started</p>
+            </div>
+
+            {% if success %}
+            <div class="alert alert-success">
+                {{ success }} <a href="{% url 'login' %}" class="success-link">Login now →</a>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert alert-error">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" id="username" name="username" required placeholder="Choose a username" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" required placeholder="Create password" minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="password2">Confirm Password *</label>
+                        <input type="password" id="password2" name="password2" required placeholder="Confirm password" minlength="8">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">I am a... *</label>
+                    <select id="role" name="role" required>
+                        <option value="buyer">Plant Buyer 🌱</option>
+                        <option value="seller">Plant Seller 🏪</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number (Optional)</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+1234567890">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address (Optional)</label>
+                    <input type="text" id="address" name="address" placeholder="Your location">
+                </div>
+
+                <button type="submit" class="btn-register">Create Account</button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+            </div>
+
+            <div class="back-home">
+                <a href="{% url 'home' %}">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

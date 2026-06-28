@@ -1,0 +1,53 @@
+{
+    "name": "easy-grow-plants-frontend",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@capacitor-community/speech-recognition": "^7.0.1",
+        "@capacitor-community/text-to-speech": "^8.0.2",
+        "@capacitor/android": "^8.4.1",
+        "@capacitor/app": "^8.1.0",
+        "@capacitor/camera": "^8.2.0",
+        "@capacitor/cli": "^8.4.1",
+        "@capacitor/core": "^8.4.1",
+        "@capacitor/filesystem": "^8.1.2",
+        "@capacitor/geolocation": "^8.2.0",
+        "@capacitor/haptics": "^8.0.2",
+        "@capacitor/motion": "^8.0.0",
+        "@capacitor/share": "^8.0.1",
+        "@capacitor/splash-screen": "^8.0.1",
+        "@capacitor/status-bar": "^8.0.2",
+        "axios": "^1.6.0",
+        "firebase": "^12.10.0",
+        "jspdf": "^4.2.0",
+        "jspdf-autotable": "^5.0.7",
+        "leaflet": "^1.9.4",
+        "lucide-react": "^0.292.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-hot-toast": "^2.6.0",
+        "react-leaflet": "^5.0.0",
+        "react-router-dom": "^6.18.0",
+        "recharts": "^2.9.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.37",
+        "@types/react-dom": "^18.2.15",
+        "@vitejs/plugin-react": "^4.2.0",
+        "autoprefixer": "^10.4.16",
+        "eslint": "^8.53.0",
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-react-refresh": "^0.4.4",
+        "postcss": "^8.4.31",
+        "tailwindcss": "^3.3.5",
+        "vite": "^5.0.0"
+    }
+}

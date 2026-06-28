@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Marketplace - Easy Grow Plants{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/marketplace.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="marketplace-container">
+    <div class="marketplace-header">
+        <h1>🌿 Plant Marketplace</h1>
+        <p>Discover and purchase beautiful plants for your home and garden</p>
+    </div>
+
+    {% if plants %}
+    <div class="plants-grid">
+        {% for plant in plants %}
+        <div class="plant-card">
+            <div class="plant-image">
+                🌱
+            </div>
+            <div class="plant-info">
+                <h3 class="plant-name">{{ plant.name }}</h3>
+                {% if plant.scientific_name %}
+                <p class="plant-scientific">{{ plant.scientific_name }}</p>
+                {% endif %}
+                <p class="plant-description">{{ plant.description|truncatewords:20 }}</p>
+                <div class="plant-price">${{ plant.price }}</div>
+                <p class="plant-stock">
+                    {% if plant.stock > 0 %}
+                        ✅ In Stock ({{ plant.stock }} available)
+                    {% else %}
+                        ❌ Out of Stock
+                    {% endif %}
+                </p>
+                <div class="plant-actions">
+                    <a href="/api/plants/{{ plant.id }}/" class="btn btn-primary">View Details</a>
+                    {% if plant.stock > 0 %}
+                    <a href="#" class="btn btn-secondary">Add to Cart</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">🌱</div>
+        <h2>No Plants Available Yet</h2>
+        <p>Check back soon! Sellers are adding new plants every day.</p>
+        {% if user.is_authenticated and user.role == 'seller' %}
+        <a href="/admin/marketplace/plant/add/" class="btn btn-primary" target="_blank">Add Your First Plant</a>
+        {% else %}
+        <a href="/" class="btn btn-primary">Back to Home</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,281 @@
+/* Easy Grow Plants - Main Stylesheet */
+
+/* ==================== RESET & BASE ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==================== CSS VARIABLES ==================== */
+:root {
+    --primary-green: #2e7d32;
+    --dark-green: #1b5e20;
+    --light-green: #e8f5e9;
+    --accent-green: #66bb6a;
+    --text-dark: #333;
+    --text-light: #666;
+    --error-red: #c62828;
+    --success-green: #2e7d32;
+    --border-color: #e0e0e0;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ==================== BODY ==================== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--light-green) 0%, #c8e6c9 100%);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-user-greeting {
+    color: var(--text-dark);
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-green);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.nav-links a:hover {
+    color: var(--primary-green);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-green);
+    transition: width 0.3s;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Ensure buttons in navbar maintain white text and don't have underline effect */
+.nav-links .btn {
+    color: white;
+}
+
+.nav-links .btn::after {
+    display: none;
+}
+
+.nav-links .btn-secondary {
+    color: var(--primary-green);
+}
+
+.nav-links .btn-secondary:hover {
+    color: white;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: var(--primary-green);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-green);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--error-red);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b71c1c;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main-content {
+    min-height: calc(100vh - 200px);
+}
+
+/* ==================== FOOTER ==================== */
+footer {
+    background: var(--dark-green);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+}
+
+.footer-tagline {
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+footer a {
+    color: var(--accent-green);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* ==================== ALERTS ==================== */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.alert-success {
+    background: #e8f5e9;
+    color: var(--success-green);
+    border-color: var(--success-green);
+}
+
+.alert-error {
+    background: #ffebee;
+    color: var(--error-red);
+    border-color: var(--error-red);
+}
+
+.alert-info {
+    background: #e3f2fd;
+    color: #1976d2;
+    border-color: #1976d2;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .navbar-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "com.easygrowplants.app",
+  "appName": "Easy Grow Plants",
+  "webDir": "dist",
+  "server": {
+    "cleartext": true
+  }
+}
