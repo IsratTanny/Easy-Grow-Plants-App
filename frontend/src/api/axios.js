@@ -28,6 +28,25 @@ const authInterceptor = (config) => {
 api.interceptors.request.use(authInterceptor);
 iotApi.interceptors.request.use(authInterceptor);
 
+// Globally handle expired/invalid sessions: clear the token and bounce to login
+// (skipping the auth endpoints so a wrong password doesn't trigger a loop).
+const responseErrorInterceptor = (error) => {
+    const status = error.response?.status;
+    const url = error.config?.url || '';
+    const isAuthEndpoint = url.includes('/auth/login') || url.includes('/auth/refresh');
+    if (status === 401 && !isAuthEndpoint) {
+        clearAuthToken();
+        window.dispatchEvent(new Event('authChange'));
+        if (window.location.pathname !== '/login') {
+            window.location.assign('/login');
+        }
+    }
+    return Promise.reject(error);
+};
+
+api.interceptors.response.use((r) => r, responseErrorInterceptor);
+iotApi.interceptors.response.use((r) => r, responseErrorInterceptor);
+
 // Auth Helpers
 export const setAuthToken = (access, refresh) => {
     localStorage.setItem('access_token', access);

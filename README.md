@@ -1,152 +1,160 @@
-# Easy Grow Plants - Django Application
+# 🌿 Easy Grow Plants — Android App
 
-A comprehensive web platform for plant e-commerce, IoT device management, and AI integration.
+This repo builds the **Android APK** for Easy Grow Plants. It is a
+[Capacitor](https://capacitorjs.com/) wrapper around the same React app as the
+website, packaged so it runs natively on a phone.
 
-## Project Structure
+The app is a **client** — it talks to the Easy Grow Plants **Django backend**
+over HTTP. You run that backend from the companion repo **`Easy_Grow_Plants_V2`**
+(the "web" repo) and point this app at it.
+
+> 🤖 **If you are an AI agent:** read this whole file, then follow
+> **"§ Agent runbook"** at the bottom. It contains the exact, ordered commands.
+> The two things that always need attention: (1) install the Android toolchain
+> if missing, and (2) set `VITE_SERVER_URL` to the server's LAN IP before building.
+
+---
+
+## 🧭 How the pieces fit together
 
 ```
-Easy Grow Plants/
-├── backend/
-│   ├── core/
-│   │   ├── config/          # Django settings and URLs
-│   │   └── manage.py        # Django management (legacy location)
-│   ├── apps/
-│   │   ├── users/           # Custom User model and authentication
-│   │   ├── marketplace/     # Plant listings and orders
-│   │   └── iot/             # IoT devices and readings
-│   ├── microservice/        # FastAPI for IoT/AI endpoints
-│   └── db.sqlite3           # SQLite database
-├── frontend/                # React + Vite frontend (optional)
-├── .venv/                   # Python virtual environment
-├── manage.py                # Root-level Django management script
-├── requirements.txt         # Python dependencies
-└── run.bat                  # One-click startup script
+[ Your phone ]  --Wi-Fi-->  [ Server device ]
+  Easy Grow APK             Django backend  (Easy_Grow_Plants_V2, port 8000)
+   talks to  http://<server-LAN-IP>:8000/api
 ```
 
-## Quick Start
+- The **backend** runs on the server device (your laptop/PC) — see the
+  `Easy_Grow_Plants_V2` repo's README to launch it. It must listen on
+  `0.0.0.0` so the phone can reach it, and the phone must be on the **same Wi-Fi**.
+- This repo bakes the backend URL into the APK at **build time** via
+  `VITE_SERVER_URL`. If the server's IP changes, rebuild (or override in-app via
+  `localStorage 'custom_server_url'`).
 
-### Option 1: One-Click Launch (Windows)
-Simply double-click `run.bat` or run:
+---
+
+## ✅ Prerequisites
+
+| Tool | Version | Notes |
+|------|---------|-------|
+| Node.js | 18+ | for the React/Vite build |
+| **JDK 21** | 21 (LTS) | **required** — Capacitor 8 Gradle plugins need toolchain 21 (JDK 17 will fail) |
+| Android SDK | platform **34** & **36**, build-tools **34** & **36**, platform-tools, cmdline-tools | via Android Studio or the command-line tools |
+
+Installing Android Studio gives you the SDK + a JDK for free. If you only have
+the command-line SDK tools, see the install commands in the Agent runbook.
+
+---
+
+## 🚀 Build & install (summary)
+
 ```bash
-.\run.bat
-```
+# 0. Make sure the backend is running on the server device (see Easy_Grow_Plants_V2 README),
+#    started with:  python manage.py runserver 0.0.0.0:8000
 
-This will automatically:
-1. Check Python installation
-2. Activate virtual environment
-3. Install dependencies
-4. Run database migrations
-5. Start the Django server at http://localhost:8000
-
-### Option 2: Manual Setup
-
-1. **Create and activate virtual environment:**
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-2. **Install dependencies:**
-```bash
-pip install -r requirements.txt
-```
-
-3. **Run migrations:**
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-4. **Start the server:**
-```bash
-python manage.py runserver 8000
-```
-
-## Features
-
-### Backend (Django + DRF)
-- **User Management**: Custom user model with roles (Admin, Seller, Buyer)
-- **Authentication**: JWT-based authentication
-- **Marketplace**: Plant listings, orders, and inventory management
-- **IoT Integration**: Device management and sensor readings
-- **RESTful API**: Complete API for frontend integration
-
-### Microservice (FastAPI)
-- **IoT Endpoints**: Sensor data ingestion and pump control
-- **AI Mock**: Plant health diagnosis and expert chat
-
-### Frontend (React)
-- Landing page with features showcase
-- User authentication (login/register)
-- Marketplace with plant browsing
-- Buyer dashboard with IoT monitoring
-- Seller dashboard with inventory management
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register/` - User registration
-- `POST /api/auth/login/` - Login (returns JWT tokens)
-- `POST /api/auth/refresh/` - Refresh access token
-- `GET /api/auth/me/` - Get current user info
-
-### Marketplace
-- `GET /api/plants/` - List all plants
-- `POST /api/plants/` - Create plant (sellers only)
-- `GET /api/orders/` - List user orders
-- `POST /api/orders/checkout/` - Create order
-
-### IoT
-- `GET /api/devices/` - List user devices
-- `POST /api/devices/` - Register new device
-
-### Microservice (Port 8001)
-- `POST /api/sensor-data` - Submit sensor readings
-- `GET /api/control-pump/{device_id}` - Toggle water pump
-- `POST /api/chat` - Chat with AI plant expert
-- `POST /api/diagnose` - Diagnose plant health
-
-## Admin Panel
-
-Access the Django admin at http://localhost:8000/admin
-
-Create a superuser:
-```bash
-python manage.py createsuperuser
-```
-
-## Technology Stack
-
-- **Backend**: Django 6.0, Django REST Framework
-- **Database**: SQLite (development) / PostgreSQL (production)
-- **Authentication**: JWT (SimpleJWT)
-- **Microservice**: FastAPI, Uvicorn
-- **Frontend**: React 18, Vite, Tailwind CSS
-- **Charts**: Recharts
-- **Icons**: Lucide React
-
-## Development
-
-### Running Backend Only
-```bash
-python manage.py runserver 8000
-```
-
-### Running Microservice
-```bash
-uvicorn backend.microservice.main:app --reload --port 8001
-```
-
-### Running Frontend
-```bash
+# 1. Point the app at the backend (server device LAN IP).
 cd frontend
-npm install
-npm run dev
+cp .env.example .env
+#   edit .env →  VITE_SERVER_URL=http://<SERVER_LAN_IP>:8000
+#   (find the IP on the server device with:  hostname -I )
+
+# 2. Build the web bundle and sync it into the Android project.
+npm install --legacy-peer-deps
+npx vite build --mode capacitor
+npx cap sync android
+
+# 3. Build the APK (point JAVA_HOME at a JDK 21 and ANDROID_HOME at the SDK).
+cd android
+export JAVA_HOME=/path/to/jdk-21
+export ANDROID_HOME=$HOME/Android/Sdk
+./gradlew assembleDebug --no-daemon
+
+# 4. The APK is here:
+#    frontend/android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## Notes
+Then transfer `app-debug.apk` to your phone and open it (allow "install from
+unknown sources"), or with USB debugging: `adb install app-debug.apk`.
 
-- The `run.bat` script focuses on the Django backend only
-- For full-stack development, run backend, microservice, and frontend separately
-- Frontend requires Node.js to be installed
-- Database migrations are automatically applied on startup via `run.bat`
+Log in with the demo account `Israt Sultana` / `EasyGrow123!` (created by the
+backend's `create_demo_users` command).
+
+---
+
+## ⚙️ Configuration details
+
+- **Backend URL:** `frontend/src/utils/platform.js` reads `VITE_SERVER_URL`
+  (baked at build). Default fallback is `http://10.0.2.2:8000` (the Android
+  **emulator's** route to the host's `localhost:8000`).
+  - Physical phone → set `VITE_SERVER_URL=http://<server-LAN-IP>:8000`.
+  - Emulator on the server device → leave it unset.
+- **Runtime override (no rebuild):** set `localStorage['custom_server_url']` in
+  the app's WebView to a different backend URL.
+- **Cleartext HTTP** is enabled (`android:usesCleartextTraffic="true"`), so the
+  app can talk to a plain-HTTP LAN backend. For production use HTTPS.
+- App id: `com.easygrowplants.app`. Project SDK: `compileSdk 36`, `targetSdk 34`,
+  `minSdk 24` (see `frontend/android/variables.gradle`).
+
+---
+
+## 🩺 Troubleshooting
+
+| Symptom | Cause / fix |
+|---------|-------------|
+| Gradle: *"Cannot find a Java installation … languageVersion=21"* | Use **JDK 21** (set `JAVA_HOME`). JDK 17 is too old for these plugins. |
+| Gradle: *"compile against version 36 or later"* | Install SDK **platform 36** + **build-tools 36**; `compileSdkVersion=36` is already set. |
+| App opens but data won't load / login fails | Backend not reachable: ensure it runs on `0.0.0.0:8000`, phone is on the **same Wi-Fi**, and `VITE_SERVER_URL` is the server's current LAN IP. Test from the phone's browser: `http://<server-LAN-IP>:8000/admin/login/`. |
+| Plant images don't show | Backend must run with `DEBUG=True` (serves `/media` and `/images`) and have been seeded (`python manage.py seed_marketplace`). |
+| `gradlew: Permission denied` | `chmod +x frontend/android/gradlew`. |
+| SDK not found | Create `frontend/android/local.properties` with `sdk.dir=/absolute/path/to/Android/Sdk`, or export `ANDROID_HOME`. |
+
+---
+
+## 🤖 Agent runbook (exact commands, Linux)
+
+Run from the repo root. Adjust paths/versions as noted.
+
+```bash
+# ── A. Toolchain (skip any step already satisfied) ──────────────────────────
+# A1. Node 18+ must be installed (check: node -v).
+
+# A2. JDK 21 — portable, no sudo:
+mkdir -p ~/.local && cd ~/.local
+curl -sL -o jdk21.tgz "https://api.adoptium.net/v3/binary/latest/21/ga/linux/x64/jdk/hotspot/normal/eclipse"
+tar -xzf jdk21.tgz && rm jdk21.tgz && mv jdk-21* jdk-21
+export JAVA_HOME=~/.local/jdk-21 && export PATH=$JAVA_HOME/bin:$PATH
+
+# A3. Android SDK — if you don't have Android Studio, install command-line tools:
+#   Download "commandlinetools-linux" from https://developer.android.com/studio#command-line-tools
+#   unzip into ~/Android/Sdk/cmdline-tools/latest, then:
+export ANDROID_HOME=~/Android/Sdk
+yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses
+$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME \
+  "platform-tools" "platforms;android-34" "platforms;android-36" \
+  "build-tools;34.0.0" "build-tools;36.0.0"
+
+# ── B. Backend (the app needs it running) ───────────────────────────────────
+# Launch the Easy_Grow_Plants_V2 backend per ITS README, but bind all interfaces:
+#   (in that repo)  python manage.py runserver 0.0.0.0:8000
+# Discover the server LAN IP:
+hostname -I | awk '{print $1}'      # e.g. 192.168.0.42
+
+# ── C. Configure + build the APK ────────────────────────────────────────────
+cd "<this-repo>/frontend"
+printf 'VITE_SERVER_URL=http://<SERVER_LAN_IP>:8000\n' > .env   # use the IP from step B
+npm install --legacy-peer-deps
+npx vite build --mode capacitor
+npx cap sync android
+cd android
+[ -f local.properties ] || echo "sdk.dir=$ANDROID_HOME" > local.properties
+chmod +x gradlew
+JAVA_HOME=~/.local/jdk-21 ANDROID_HOME=~/Android/Sdk ./gradlew assembleDebug --no-daemon
+
+# ── D. Result ───────────────────────────────────────────────────────────────
+# APK → frontend/android/app/build/outputs/apk/debug/app-debug.apk
+# Optionally copy it to the repo root:
+cp app/build/outputs/apk/debug/app-debug.apk ../../EasyGrowPlants-debug.apk
+```
+
+Verification signals: `BUILD SUCCESSFUL` from Gradle, and an `app-debug.apk`
+(~25–30 MB) at the path above. Install it on a phone that shares the server's
+Wi-Fi and log in with the demo account.

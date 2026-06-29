@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732" viewBox="0 0 2732 2732">
+  <rect width="2732" height="2732" fill="#ecfdf5"/>
+  <g transform="translate(629,623) scale(1.44)">
+    <path d="M512 232 C 380 318 380 606 512 800 C 644 606 644 318 512 232 Z" fill="#16a34a"/>
+    <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round">
+      <path d="M512 286 C 506 520 510 660 512 752"/>
+      <path d="M512 420 C 470 404 442 380 420 346"/>
+      <path d="M512 420 C 554 404 582 380 604 346"/>
+      <path d="M512 520 C 466 506 436 482 414 448"/>
+      <path d="M512 520 C 558 506 588 482 610 448"/>
+      <path d="M512 620 C 472 610 446 590 428 562"/>
+      <path d="M512 620 C 552 610 578 590 596 562"/>
+    </g>
+  </g>
+</svg>
