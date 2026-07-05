@@ -3,6 +3,14 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# Load environment variables from a .env file at the repo root (if present), so
+# secrets like the Gemini API key can be configured without exporting vars.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR.parent / '.env')
+except ImportError:
+    pass
 # backend/core/config/settings.py -> backend/core/config -> backend/core -> backend -> BASE_DIR should be 'backend' usually project root.
 # Actually standard is BASE_DIR is where manage.py is.
 # My manage.py is in backend/core.
@@ -159,6 +167,11 @@ CSRF_TRUSTED_ORIGINS = [
 # Allow large image uploads for AI processing (50 MB limit)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50 MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50 MB
+
+# Gemini API — used server-side for plant detection + chatbot + care guides.
+# Configure the key in the repo-root .env (GEMINI_API_KEY=...); never hard-code it.
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash-lite')
 
 # Force reload at 04/08/2026 11:21:28
 # Reload
