@@ -214,21 +214,7 @@ export default function PlantDetection() {
                                     </div>
                                 )}
 
-                                {/* Model Badge & Confidence */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                                    {result.model && (
-                                        <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#6D28D9', backgroundColor: '#EDE9FE', padding: '4px 10px', borderRadius: '999px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                            🤖 {result.model}
-                                        </span>
-                                    )}
-                                    {result.confidence && (
-                                        <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#0369A1', backgroundColor: '#E0F2FE', padding: '4px 10px', borderRadius: '999px' }}>
-                                            🎯 {result.confidence}% confidence
-                                        </span>
-                                    )}
-                                </div>
-
-                                <button 
+                                <button
                                     onClick={() => navigate('/community', { state: { shared_plant: result.plant_name, shared_disease: result.disease, shared_image: image } })}
                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 24px', width: '100%', backgroundColor: '#10B981', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '15px', fontWeight: '600', marginTop: '16px' }}>
                                     <Share2 size={18} />

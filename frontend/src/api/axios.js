@@ -36,10 +36,11 @@ const responseErrorInterceptor = (error) => {
     const isAuthEndpoint = url.includes('/auth/login') || url.includes('/auth/refresh');
     if (status === 401 && !isAuthEndpoint) {
         clearAuthToken();
+        // Soft, client-side sign-out: the 'authChange' listener in App.jsx flips
+        // isAuth and PrivateRoute navigates to /login via React Router. We must
+        // NOT do a hard window.location redirect here — in the Capacitor WebView
+        // that tries to load "/login" as a document and white-screens the app.
         window.dispatchEvent(new Event('authChange'));
-        if (window.location.pathname !== '/login') {
-            window.location.assign('/login');
-        }
     }
     return Promise.reject(error);
 };
