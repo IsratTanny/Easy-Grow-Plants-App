@@ -1,14 +1,26 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api, setAuthToken } from '../api/axios';
-import { Leaf } from 'lucide-react';
+import { Leaf, Server } from 'lucide-react';
 import { signInWithEmailAndPassword, signOut, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
+import { isNative } from '../utils/platform';
 
 export default function Login() {
     const [formData, setFormData] = useState({ username: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    // Native app only: let the user point the app at their server's address.
+    const [showServer, setShowServer] = useState(false);
+    const [serverUrl, setServerUrl] = useState(localStorage.getItem('custom_server_url') || '');
+
+    const saveServer = () => {
+        const url = serverUrl.trim().replace(/\/+$/, '');
+        if (url) localStorage.setItem('custom_server_url', url);
+        else localStorage.removeItem('custom_server_url');
+        window.location.reload(); // re-init the API client with the new address
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,6 +122,38 @@ export default function Login() {
             <p className="mt-6 text-center text-gray-600">
                 Don't have an account? <Link to="/register" className="text-nature-600 font-medium hover:underline">Register</Link>
             </p>
+
+            {isNative() && (
+                <div className="mt-6 pt-4 border-t border-gray-100">
+                    <button
+                        type="button"
+                        onClick={() => setShowServer((s) => !s)}
+                        className="flex items-center gap-1.5 mx-auto text-xs font-bold text-gray-400 hover:text-nature-600 transition-colors"
+                    >
+                        <Server className="w-3.5 h-3.5" /> Server settings
+                    </button>
+                    {showServer && (
+                        <div className="mt-3 space-y-2">
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide">Backend server address</label>
+                            <input
+                                type="url"
+                                inputMode="url"
+                                autoCapitalize="none"
+                                placeholder="http://192.168.0.42:8000"
+                                className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-nature-500 outline-none"
+                                value={serverUrl}
+                                onChange={(e) => setServerUrl(e.target.value)}
+                            />
+                            <button type="button" onClick={saveServer} className="w-full bg-nature-900 text-white py-2.5 rounded-lg font-bold text-sm hover:bg-nature-700 transition-colors">
+                                Save & Connect
+                            </button>
+                            <p className="text-[10px] text-gray-400 leading-relaxed">
+                                Enter the address shown by the server launcher (e.g. <b>http://YOUR-PC-IP:8000</b>). Your phone must be on the same Wi‑Fi. The app reloads to connect.
+                            </p>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

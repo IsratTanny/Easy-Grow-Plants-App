@@ -8,10 +8,10 @@ The app is a **client** — it talks to the Easy Grow Plants **Django backend**
 over HTTP. You run that backend from the companion repo **`Easy_Grow_Plants_V2`**
 (the "web" repo) and point this app at it.
 
-> 🤖 **If you are an AI agent:** read this whole file, then follow
-> **"§ Agent runbook"** at the bottom. It contains the exact, ordered commands.
-> The two things that always need attention: (1) install the Android toolchain
-> if missing, and (2) set `VITE_SERVER_URL` to the server's LAN IP before building.
+> 🤖 **If you are an AI agent:** most people don't need to build anything — a
+> ready-to-install **`EasyGrowPlants.apk`** is committed at the repo root (see
+> "§ Install the prebuilt APK"). Only rebuild if you changed the app source, in
+> which case follow "§ Agent runbook" (install the Android toolchain, then build).
 
 ---
 
@@ -19,16 +19,33 @@ over HTTP. You run that backend from the companion repo **`Easy_Grow_Plants_V2`*
 
 ```
 [ Your phone ]  --Wi-Fi-->  [ Server device ]
-  Easy Grow APK             Django backend  (Easy_Grow_Plants_V2, port 8000)
-   talks to  http://<server-LAN-IP>:8000/api
+  Easy Grow APK             Django backend  (Easy_Grow_Plants_V2, port 8000/8080)
+   talks to  http://<server-LAN-IP>:PORT/api
 ```
 
 - The **backend** runs on the server device (your laptop/PC) — see the
-  `Easy_Grow_Plants_V2` repo's README to launch it. It must listen on
-  `0.0.0.0` so the phone can reach it, and the phone must be on the **same Wi-Fi**.
-- This repo bakes the backend URL into the APK at **build time** via
-  `VITE_SERVER_URL`. If the server's IP changes, rebuild (or override in-app via
-  `localStorage 'custom_server_url'`).
+  `Easy_Grow_Plants_V2` repo's README (its one-click launcher is easiest). It
+  must listen on `0.0.0.0` so the phone can reach it, and the phone must be on
+  the **same Wi‑Fi**.
+- The APK is **network-independent**: on first launch you set the server address
+  in-app (Login screen → **Server settings**). No rebuild needed when the IP
+  changes.
+
+---
+
+## 📲 Install the prebuilt APK (recommended — no build)
+
+1. **Start the backend** on your PC (from the `Easy_Grow_Plants_V2` repo — double‑click
+   the launcher, or `python manage.py runserver 0.0.0.0:8000`). Note the LAN
+   address it prints, e.g. `http://192.168.0.42:8000`.
+2. **Get the APK onto your phone** — copy `EasyGrowPlants.apk` (repo root) via
+   USB / Google Drive / etc., or download it from GitHub on the phone.
+3. **Install it** — tap the file, allow "install from unknown sources".
+4. **Open the app → Login screen → tap "Server settings"**, enter the address
+   from step 1 (`http://<your-PC-IP>:8000`), tap **Save & Connect**.
+5. Log in: `Israt Sultana` / `EasyGrow123!` (admin: `admin` / `EasyGrow123!`).
+
+That's it — the same APK works on any device/network via the Server settings.
 
 ---
 

@@ -61,6 +61,5 @@ build_log.txt
 build_status.txt
 error.txt
 
-# Built APK (network-specific build artifact — rebuild per README)
-EasyGrowPlants.apk
-*.apk
+# NOTE: EasyGrowPlants.apk IS committed so it can be pulled onto a phone.
+# It uses an in-app "Server settings" screen, so one APK works on any network.
