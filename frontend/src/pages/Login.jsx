@@ -46,32 +46,14 @@ export default function Login() {
             // Dispatch event to update Navbar state immediately
             window.dispatchEvent(new Event('authChange'));
 
-            // 5. Email Verification Check for Buyers
-            if (userRole === 'buyer' && userEmail && !userRes.data.is_verified) {
-                try {
-                    // Sign into Firebase strictly to check email verification status
-                    const fbCred = await signInWithEmailAndPassword(auth, userEmail, formData.password);
-                    if (!fbCred.user.emailVerified) {
-                        await sendEmailVerification(fbCred.user);
-                        await signOut(auth);
-                        setError('Your email is not verified. A new verification link has been sent to your email.');
-                        return;
-                    }
-                } catch (fbErr) {
-                    console.error("Firebase Auth Error: ", fbErr.code, fbErr.message);
-                    
-                    if (fbErr.code === 'auth/invalid-credential' || fbErr.code === 'auth/wrong-password') {
-                        setError('Firebase authentication failed. This usually happens if your password was reset in Django but not in Firebase. Please use "Forgot Password" or contact support.');
-                    } else if (fbErr.code === 'auth/user-not-found') {
-                        setError('Firebase account not found. Please contact support to sync your account.');
-                    } else {
-                        setError('Verification check failed. Please ensure your email is verified.');
-                    }
-                    return;
-                }
-            }
+            // NOTE: Django is the source of truth for auth in the app. We do NOT
+            // gate login on a Firebase email-verification check here — demo users
+            // aren't mirrored in Firebase and Firebase is unreliable in the mobile
+            // WebView, which was blocking valid logins. (Kept userEmail read above
+            // only for compatibility.)
+            void userEmail;
 
-            // 6. Role-Based Navigation
+            // Role-Based Navigation
             if (userRole === 'buyer') {
                 navigate('/marketplace');
             } else if (userRole === 'seller') {
@@ -83,7 +65,14 @@ export default function Login() {
             }
 
         } catch (err) {
-            setError(err.response?.data?.error || err.response?.data?.detail || 'Invalid username or password');
+            if (err.response) {
+                // The server responded (e.g. 401) — genuine bad credentials.
+                setError(err.response.data?.error || err.response.data?.detail || 'Invalid username or password');
+            } else {
+                // No response — the app couldn't reach the backend at all.
+                const base = localStorage.getItem('custom_server_url') || 'the default server';
+                setError(`Can't reach the server (${base}). Check the IP/port, that both devices are on the same Wi-Fi, and that the backend is running.`);
+            }
         }
     };
 

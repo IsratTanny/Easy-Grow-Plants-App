@@ -18,6 +18,10 @@ export const iotApi = axios.create({
 });
 
 const authInterceptor = (config) => {
+    // Always resolve the base URL at request time so a change to the server
+    // address (custom_server_url) takes effect immediately, without needing a
+    // full app reload / re-init of the axios instance.
+    config.baseURL = getApiBase();
     const token = localStorage.getItem('access_token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
