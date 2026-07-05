@@ -33,7 +33,7 @@ import DeviceManager from './pages/DeviceManager';
 import { LanguageProvider } from './i18n/LanguageContext';
 import LanguageSelectionModal from './components/LanguageSelectionModal';
 import PrivateRoute from './components/PrivateRoute';
-import { isAuthenticated } from './api/axios';
+import { isAuthenticated, api, setAuthToken } from './api/axios';
 
 import VoiceAssistant from './components/VoiceAssistant';
 import { Toaster } from 'react-hot-toast';
@@ -47,6 +47,24 @@ function App() {
         };
         window.addEventListener('authChange', updateAuth);
         return () => window.removeEventListener('authChange', updateAuth);
+    }, []);
+
+    // DEMO MODE: sign in as the demo user in the background so real data loads
+    // without ever showing a login screen. If the backend is unreachable, the
+    // app is still fully browsable (just without live data).
+    useEffect(() => {
+        if (!localStorage.getItem('access_token')) {
+            api.post('/auth/login/', { username: 'Israt Sultana', password: 'EasyGrow123!' })
+                .then((res) => {
+                    setAuthToken(res.data.access, res.data.refresh);
+                    if (res.data.role) {
+                        localStorage.setItem('userRole', res.data.role);
+                        localStorage.setItem('user_role', res.data.role);
+                    }
+                    window.dispatchEvent(new Event('authChange'));
+                })
+                .catch(() => { /* offline demo — UI still browsable */ });
+        }
     }, []);
 
     return (

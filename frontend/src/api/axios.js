@@ -63,6 +63,7 @@ export const clearAuthToken = () => {
     localStorage.removeItem('refresh_token');
 };
 
-export const isAuthenticated = () => {
-    return !!localStorage.getItem('access_token');
-}
+// DEMO MODE: no login required — always treat the session as authenticated so
+// every page is browsable when showing the app. Real data still loads whenever a
+// token is present (App.jsx signs in as the demo user silently on startup).
+export const isAuthenticated = () => true;
